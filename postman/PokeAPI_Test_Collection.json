@@ -1,0 +1,313 @@
+{
+  "info": {
+    "_postman_id": "8e9d7f0e-6b75-4c83-9cfb-pokeapi-test",
+    "name": "PokeAPI - Postman API Testing",
+    "description": "Bộ kiểm thử API PokeAPI v2 phục vụ bài tập kiểm thử bằng Postman.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://pokeapi.co/api/v2",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - List Pokémon - Pagination",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pokemon?limit=10&offset=0",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pokemon"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "offset",
+              "value": "0"
+            }
+          ]
+        },
+        "description": "Kiểm tra danh sách Pokémon và phân trang."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+              "const data = pm.response.json();",
+              "pm.test('count is a number', function () { pm.expect(data.count).to.be.a('number'); });",
+              "pm.test('results is an array', function () { pm.expect(data.results).to.be.an('array'); });",
+              "pm.test('Returns 10 results', function () { pm.expect(data.results).to.have.lengthOf(10); });",
+              "pm.test('Each result has name and url', function () {",
+              "    data.results.forEach(item => {",
+              "        pm.expect(item).to.have.property('name');",
+              "        pm.expect(item).to.have.property('url');",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Get Pokémon by ID - Pikachu",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pokemon/25/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pokemon",
+            "25",
+            ""
+          ]
+        },
+        "description": "Kiểm tra lấy Pokémon theo ID."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+              "const data = pm.response.json();",
+              "pm.test('ID is 25', function () { pm.expect(data.id).to.eql(25); });",
+              "pm.test('Name is pikachu', function () { pm.expect(data.name).to.eql('pikachu'); });",
+              "pm.test('Has types array', function () { pm.expect(data.types).to.be.an('array').and.not.empty; });",
+              "pm.test('Has sprites object', function () { pm.expect(data.sprites).to.be.an('object'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Get Pokémon by Name - Ditto",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pokemon/ditto/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pokemon",
+            "ditto",
+            ""
+          ]
+        },
+        "description": "Kiểm tra lấy Pokémon theo tên."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+              "const data = pm.response.json();",
+              "pm.test('Name is ditto', function () { pm.expect(data.name).to.eql('ditto'); });",
+              "pm.test('ID is a positive number', function () { pm.expect(data.id).to.be.a('number').and.above(0); });",
+              "pm.test('Abilities is an array', function () { pm.expect(data.abilities).to.be.an('array'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Get Pokémon Species - Bulbasaur",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pokemon-species/1/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pokemon-species",
+            "1",
+            ""
+          ]
+        },
+        "description": "Kiểm tra endpoint Pokemon Species."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+              "const data = pm.response.json();",
+              "pm.test('ID is 1', function () { pm.expect(data.id).to.eql(1); });",
+              "pm.test('Name is bulbasaur', function () { pm.expect(data.name).to.eql('bulbasaur'); });",
+              "pm.test('is_legendary is boolean', function () { pm.expect(data.is_legendary).to.be.a('boolean'); });",
+              "pm.test('is_mythical is boolean', function () { pm.expect(data.is_mythical).to.be.a('boolean'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Get Type - Fire",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/type/fire/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "type",
+            "fire",
+            ""
+          ]
+        },
+        "description": "Kiểm tra endpoint Type."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+              "const data = pm.response.json();",
+              "pm.test('Name is fire', function () { pm.expect(data.name).to.eql('fire'); });",
+              "pm.test('Damage relations exists', function () { pm.expect(data.damage_relations).to.be.an('object'); });",
+              "pm.test('Pokemon list exists', function () { pm.expect(data.pokemon).to.be.an('array'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Pagination - Offset 20",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pokemon?limit=20&offset=20",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pokemon"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "20"
+            },
+            {
+              "key": "offset",
+              "value": "20"
+            }
+          ]
+        },
+        "description": "Kiểm tra phân trang với offset khác 0."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "pm.test('results contains at most 20 items', function () { pm.expect(data.results.length).to.be.at.most(20); });",
+              "pm.test('next is string or null', function () { pm.expect(data.next === null || typeof data.next === 'string').to.eql(true); });",
+              "pm.test('previous is string or null', function () { pm.expect(data.previous === null || typeof data.previous === 'string').to.eql(true); });",
+              "pm.test('Second page is different from first item', function () { pm.expect(data.results[0].name).to.not.eql('bulbasaur'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Negative - Pokémon Not Found",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pokemon/not-a-real-pokemon-999999/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pokemon",
+            "not-a-real-pokemon-999999",
+            ""
+          ]
+        },
+        "description": "Kiểm thử dữ liệu không tồn tại."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 404', function () { pm.response.to.have.status(404); });",
+              "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 - Negative - Type Not Found",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/type/not-a-real-type-999999/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "type",
+            "not-a-real-type-999999",
+            ""
+          ]
+        },
+        "description": "Kiểm thử type không tồn tại."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 404', function () { pm.response.to.have.status(404); });",
+              "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
